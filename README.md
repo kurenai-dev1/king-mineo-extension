@@ -1,16 +1,29 @@
 # mineo-extension
+
 マイネ王掲示板既読管理Chrome拡張
+
 ## Overview 
+
 マイネ王掲示板に既読管理機能を加えるChrome用の拡張です。
+
 Chrome拡張機能が使えるのは、PC版のChromeのみです。
+
 ## Setup
+
 ![Image](https://github.com/user-attachments/assets/63ca18b0-89ac-45e7-9dfe-6f2626923418)
+
 ① Chrome のタブを開き、URLに「Chrome://extensions」と入力する
+
   (もしくは、設定から「拡張管理」を選択して表示する)
+  
 ② トグルボタンで「デベロッパー モード」にする
+
 ③ 「パッケージ化されていない拡張機能を読み込む」
+
 ④ ファイルを保存したフォルダを選択する
+
 ![Image](https://github.com/user-attachments/assets/bfc3cd64-614a-4927-80bb-88f990c8d8c8)
+
 ## Operation
 
 | キー | 操作 |
