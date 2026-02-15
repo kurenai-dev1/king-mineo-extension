@@ -1,32 +1,39 @@
-# mineo-extension
+# king-mineo-extension
 
-マイネ王掲示板既読管理Chrome拡張
+マイネ王掲示板既読管理(Chrome拡張)
 
-## Overview 
+## 概要(Overview) 
 
-マイネ王掲示板に既読管理機能を加えるChrome用の拡張です。<br>
-Chrome拡張機能が使えるのは、PC版のChromeのみです。
+マイネ王掲示板に既読管理機能を加えるChrome用の拡張機能です。<br>
+Chrome拡張機能が使えるのは、PC版のChromeのみです。(スマホでは拡張機能は使えません)
 
-## Setup
+## デモ画面(Demo)
+
+次の画像のように未読（空色・無地）と既読(灰色)が解り易く表示されます。
+
+<img src="https://github.com/user-attachments/assets/4d8bc797-e335-4cdc-9546-684a773d3117" width="40%">
+
+## 導入方法(Setup)
 
 全てのファイルを任意のフォルダーにダウンロードします。
 
-![Image](https://github.com/user-attachments/assets/63ca18b0-89ac-45e7-9dfe-6f2626923418)
+次に、Chrome の操作で拡張機能を有効にします。
 
-① Chrome のタブを開き、URLに「Chrome://extensions」と入力する<br>
-　 (もしくは、メニューの設定から「拡張機能」を選択して表示する)
+<img src="https://github.com/user-attachments/assets/63ca18b0-89ac-45e7-9dfe-6f2626923418" width="40%">
+
+1. Chrome のタブを開き、URLに「Chrome://extensions」と入力する  
+  (もしくは、メニューの設定から「拡張機能」を選択して表示する)
   
-② トグルボタンで「デベロッパー モード」にする
+2.  トグルボタンで「デベロッパー モード」にする
 
-③ 「パッケージ化されていない拡張機能を読み込む」を選択
-
-④ ファイルを保存したフォルダを選択する
+3. 「パッケージ化されていない拡張機能を読み込む」を選択  
+ ファイルを保存したフォルダを選択する
 
 正常に読み込まれると以下のように追加されます。
 
-![Image](https://github.com/user-attachments/assets/bfc3cd64-614a-4927-80bb-88f990c8d8c8)
+<img src="https://github.com/user-attachments/assets/bfc3cd64-614a-4927-80bb-88f990c8d8c8" width="30%">
 
-## Operation
+## 操作方法(Usage)
 
 掲示板の一覧画面では、必要に応じて、キーボードによる操作が可能です。<br>
 操作したい掲示板にマウスを合わせ、キーを操作します。
@@ -37,3 +44,17 @@ Chrome拡張機能が使えるのは、PC版のChromeのみです。
 | D | 非表示。"R"で再表示 |
 | S | 情報保管 json形式 |
 | L | 情報復元 |
+
+既読管理のデータは端末(ブラウザ)単位に保存されるので、複数端末で同期を取りたい場合には、  
+ファイルへの保管と復元を使います。
+
+## 今後(Todo)
+
+* 掲示版の仕様変更に対応できるかが未知数です。  
+* Firefox でも基本的には動作します。(manifest.jsonの若干の修正が必要)  
+* スマホ版Firefoxでも使えますが、キーイベントが使えないので、代わりの手段(タッチの長押し等)が必要です。  
+* Firefox で継続して使うには、Firefox のアドオン署名をしてもらう必要があります。
+
+
+
+
