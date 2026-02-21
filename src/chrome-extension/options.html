@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>options</title>
+  <script src="/options.js" defer></script>
+</head>
+<body>
+  <header>
+  <h2>マイネ王掲示板既読管理のオプション設定<h2>
+  </header>
+  <main>
+    <p><h3>PC版のキー操作</h3></p>
+    <p>[R]---既読・未読の切り替え<br/>
+       [D]---非表示(棒状)へ。[R]で復元<br/>
+       [S]---状態保管(エクスポート)<br/>
+       [L]---状態復元(インポート)
+    </p>
+    <p><h3>モバイル版の操作</h3></p>
+    <p>掲示板での長押しで以下の切替</p>
+    <p>未読➡既読➡棒表示➡(未読🔄)</p>
+
+    <p><h3>コメント数の多い掲示板の非表示</h3></p>
+    <p>長期に利用されている掲示板では新着コメントとして検索されますが、<br>
+       利用者が前に見ていない場合は50以上のコメントがあるものは非表示にしています。
+    </p>
+
+    <p><h3>モバイル版での制限</h3></p>
+    <p>長押しで標準であればコンテキストメニュー（コピー等）がポップアップされますが、</p>
+    <p>既読・未読の切替に使用する為にあえて抑止しています。</p>
+
+    <p><h3>既読管理データの保管と復元</h3></p>
+    <p>他のブラウザと同期する為にも使用できます。</p>
+    <button type="button" id="saveButton">保管</button>
+    <button type="button" id="restoreButton">復元</button>
+    <button type="button" id="closeButton">設定を閉じる</button>
+  </main>
+</body>
+</html>
