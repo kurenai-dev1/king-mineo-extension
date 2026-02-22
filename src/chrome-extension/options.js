@@ -78,7 +78,7 @@ document.querySelector("#restoreButton").addEventListener("click", async () => {
   } catch {}
 });
 
-// 復元ボタンクリック時
+// 閉じるボタンクリック時
 document.querySelector("#closeButton").addEventListener("click", async () => {
    window.close();
 });
