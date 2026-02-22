@@ -54,8 +54,8 @@ function getIdFromUrl( url ) {
 }
 function setJsonToMapArticles( strJson ) {
   try {
-    // Object.entries() は key が文字列になるので注意(MAP自体に制限は無い)
-    const map = new Map(Object.entries(JSON.parse(strJson)));
+    // const map = new Map(Object.entries(JSON.parse(strJson)));
+    const map = new Map(JSON.parse(strJson));
     if( map ) {
       mapArticles = map;
     }
@@ -63,7 +63,8 @@ function setJsonToMapArticles( strJson ) {
   syncMapArticlesToStorage();
 }
 function syncMapArticlesToStorage() {
-  const strJson = JSON.stringify(Object.fromEntries(mapArticles));
+  // const strJson = JSON.stringify(Object.fromEntries(mapArticles));  // 順序が変わる
+  const strJson = JSON.stringify(Array.from(mapArticles));
   localStorage.setItem('map_articles', strJson);
   chrome.storage.local.set({map_articles: strJson });
 }
@@ -304,6 +305,7 @@ if( !isDetail ) {
       }
       if(  event.code === 'KeyL' ) {
         restoreMapArticles();
+        scanSection([]); // 強制実行
       } 
     }); // keydown
     // Mobile のみの実装
