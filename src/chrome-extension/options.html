@@ -9,33 +9,35 @@
 </head>
 <body>
   <header>
-  <h2>マイネ王掲示板既読管理のオプション設定<h2>
+  <h3>マイネ王掲示板既読管理の設定</h3>
   </header>
   <main>
-    <p><h3>PC版のキー操作</h3></p>
-    <p>[R]---既読・未読の切り替え<br/>
+    <h3>&#x1F7E9; PC版のキー操作</h3>
+    <p style="padding-left:1em;">
+       [R]---既読・未読の切り替え<br/>
        [D]---非表示(棒状)へ。[R]で復元<br/>
        [S]---状態保管(エクスポート)<br/>
        [L]---状態復元(インポート)
     </p>
-    <p><h3>モバイル版の操作</h3></p>
-    <p>掲示板での長押しで以下の切替</p>
-    <p>未読➡既読➡棒表示➡(未読🔄)</p>
+    <h3>&#x1F7E9; モバイル版の操作</h3>
+    <p style="padding-left:1em;">
+      掲示板での[長押し]で以下の切替<br/>
+      (未読➡既読➡棒表示➡未読)🔄<br/>
+      ※標準のポップアップメニューは抑止できないので範囲外を押してください。<br/>
 
-    <p><h3>コメント数の多い掲示板の非表示</h3></p>
-    <p>長期に利用されている掲示板では新着コメントとして検索されますが、<br>
-       利用者が前に見ていない場合は50以上のコメントがあるものは非表示にしています。
+    <h3>&#x1F7E9; 非表示の項目</h3>
+    <p style="padding-left:1em;">
+      「注目の投稿」「新着コメントがあった掲示板」<br/>
+      新しい未読で50以上のコメントがあるもの<br/>
     </p>
 
-    <p><h3>モバイル版での制限</h3></p>
-    <p>長押しで標準であればコンテキストメニュー（コピー等）がポップアップされますが、</p>
-    <p>既読・未読の切替に使用する為にあえて抑止しています。</p>
-
-    <p><h3>既読管理データの保管と復元</h3></p>
-    <p>他のブラウザと同期する為にも使用できます。</p>
-    <button type="button" id="saveButton">保管</button>
-    <button type="button" id="restoreButton">復元</button>
-    <button type="button" id="closeButton">設定を閉じる</button>
+    <h3>&#x1F7E9; 既読管理データのファイルへの保存と復元</h3>
+    <p style="padding-left:1em;">
+      他のブラウザと同期する為にも使用できます。<br/>
+      <button type="button" id="saveButton">ファイルへ保存する</button>
+      <button type="button" id="restoreButton">ファイルから復元する</button>
+    </p>
+    <button type="button" id="closeButton"><big>設定を閉じる&#x274E;</big></button>
   </main>
 </body>
 </html>
