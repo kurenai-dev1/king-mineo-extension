@@ -1,5 +1,5 @@
 //
-// マイネ王掲示板用スクリプト(Firefox版:モバイル共用)
+// マイネ王掲示板用スクリプト(Firefox用)
 //
 // "https://king.mineo.jp/reports" で呼び出される
 // 一覧画面・詳細画面 共通処理
@@ -13,6 +13,7 @@ const MAX_ARTICLES =  500; // mapArticles の最大数
 const MAX_COMMENTS =   50; // 非表示にするコメント数の下限
 const NARROW_COMMENTS = 9999; // 棒表示件数(フラグの代わり)
 const NARROW_HEIGHT = '40px'; // 棒の高さ
+const IS_USE_MOBILE = true;
 
 // 一覧画面・詳細画面判定
 let isDetail = false; // true:詳細画面
@@ -25,18 +26,12 @@ let listArticles = JSON.parse(localStorage.getItem("list_articles"));
 if( !listArticles ) listArticles = {};
 
 // 詳細閲覧情報の保持用 MAP (循環バッファ)
-let mapArticles;
+let mapArticles = new Map();
 {
+  // 既存データの読み込み
   const strJson = localStorage.getItem('map_articles');
   if( strJson ) {
-    // Object.entries() は key が文字列になるので注意(MAP自体に制限は無い)
-    try {
-      mapArticles = new Map(Object.entries(JSON.parse(strJson)));
-    } catch {
-      mapArticles = new Map();
-    }
-  } else {
-    mapArticles = new Map();
+    setJsonToMapArticles( strJson );
   }
 }
 // ▲ 共通変数と初期化
@@ -57,11 +52,20 @@ function getIdFromUrl( url ) {
   }
   return id;
 }
-// MAPデータを storage(複数)に保存
-function setStorageMapArticles( strJson ) {
-  localStorage.setItem('map_articles', strJson); // 保管
+function setJsonToMapArticles( strJson ) {
+  try {
+    // Object.entries() は key が文字列になるので注意(MAP自体に制限は無い)
+    const map = new Map(Object.entries(JSON.parse(strJson)));
+    if( map ) {
+      mapArticles = map;
+    }
+  } catch {}
+  syncMapArticlesToStorage();
+}
+function syncMapArticlesToStorage() {
+  const strJson = JSON.stringify(Object.fromEntries(mapArticles));
+  localStorage.setItem('map_articles', strJson);
   chrome.storage.local.set({map_articles: strJson });
-  // todo sync
 }
 // MAP に追加する処理(関数)
 function addToMapArticles(key, value) {
@@ -77,13 +81,11 @@ function addToMapArticles(key, value) {
     const oldestKey = mapArticles.keys().next().value;
     mapArticles.delete(oldestKey);
   }
-  const strJson = JSON.stringify(Object.fromEntries(mapArticles));
-  setStorageMapArticles(strJson); // 保管
+  syncMapArticlesToStorage();
 }
 function delFromMapArticles( key ) {
   mapArticles.delete( key );
-  const strJson = JSON.stringify(Object.fromEntries(mapArticles));
-  setStorageMapArticles(strJson);
+  syncMapArticlesToStorage();
 }
 // <article> 内のコメント数の取得
 function getCommentCount( article ) {
@@ -100,7 +102,7 @@ function getCommentCount( article ) {
 }
 // <article> を棒状に表示
 function setNarrow(article) {
-        article.style.height = NARROW_HEIGHT; // '10px'
+        article.style.height = NARROW_HEIGHT;
         article.style.backgroundColor = '#c0c0c0';
         const link = article.querySelector('.stretched-link');
         if( link ) article.title = link.textContent; // ツールチップ
@@ -141,12 +143,8 @@ function restoreMapArticles() {
                 const content = e.target.result;
                 // document.getElementById('output').textContent = content; // 結果を表示
                 if( content ) {
-                   const map = new Map(Object.entries(JSON.parse(content)));
-                   if( map ) {
-                     mapArticles = map;
-                     setStorageMapArticles( content ); 
-                     alert('既読管理がリストアされました。');
-                   }
+                   setJsonToMapArticles( content );
+                   alert('既読管理がリストアされました。');
                 }
                 // 処理が完了したら要素をDOMから削除
                 document.body.removeChild(input);
@@ -216,7 +214,6 @@ var config = {
 //
 // ■ 変更が起こった時の処理
 //
-// var observer = new MutationObserver(function(mutations) { // 無名関数使用の場合
 var scanSection = (mutations) => {
   var section = document.querySelector("main section");
   if( section ) {
@@ -294,7 +291,7 @@ if( !isDetail ) {
                   addToMapArticles(String(id), NARROW_COMMENTS );
                   setNarrow(article);
                 }
-              } // 'KeyD'
+              }
             } // id > 0
           }  // if article
         }
@@ -304,15 +301,14 @@ if( !isDetail ) {
           const strJson = localStorage.getItem('map_articles');
           downloadText(strJson, "mineo_articles.json");
         }
-      } // 'KeyS'
+      }
       if(  event.code === 'KeyL' ) {
         restoreMapArticles();
-      } // 'KeyL'
+      } 
     }); // keydown
-
-    // Firefox のみの実装
+    // Mobile のみの実装
     // スマホ用 長押しタップで 未読 -> 既読 -> 非表示 -> 未読 のサイクル
-    {
+    if(IS_USE_MOBILE) {
       let timer;
       const events = ['touchstart', 'mousedown']; // mouse はデバッグ用
 
@@ -365,11 +361,11 @@ if( !isDetail ) {
       ['touchend', 'touchmove', 'mouseup', 'mouseleave'].forEach(eventType => {
         document.addEventListener(eventType, () => clearTimeout(timer));
       });
-    } // スマホ
-  }  // section
+    } // mobile
+  } // section
 
-  // ポップアップからのメッセージを受け取るためのリスナー登録
-/*  
+  // ポップアップからのメッセージでファイル操作を行う
+/*
   // Firefox では、popup 画面でのファイル操作は出来ないので使わない
   // if (!chrome.runtime.onMessage.hasListeners()) { // 効果なし
   chrome.runtime.onMessage.addListener((request, _ev, sendResponse) => {
@@ -379,21 +375,14 @@ if( !isDetail ) {
     if( request.cmd === 'save') {
       if( mapArticles ) {
         const strJson = localStorage.getItem('map_articles');
-       // Chrome ではポップアップ画面がカレントなのでそっちで実行する
-       // sendResponse(strJson);
-       // Firefox では、メッセージはポップアップ画面へは返せない(Chromeと逆)
-        downloadText(strJson, "mineo_articles.json");
+        sendResponse(strJson);
+       // ポップアップ画面がカレントなのでデータだけをやり取りする
+       // downloadText(strJson, "mineo_articles.json");
       }
     }
     if( request.cmd === 'restore') {
-      // Firefox では送信できない
-      restoreMapArticles(); // 許可されない。Firefox では操作イベント内でしか使えない。
-      const map = new Map(Object.entries(JSON.parse(request.data)));
-      if( map ) {
-        mapArticles = map;
-        setStorageMapArticles( request.data ); 
-        alert('既読管理がリストアされました。');
-      }
+      setJsonToMapArticles( request.data );
+      alert('既読管理がリストアされました。');
     }
   });
   // }
@@ -411,12 +400,13 @@ if( !isDetail ) {
         try {   
           await chrome.storage.local.remove( 'restore_articles' ); // イベントが起きる
         } catch {};
-        setStorageMapArticles( strJson ); 
-        alert('既読管理がリストアされました。');
+        setJsonToMapArticles( strJson ); 
+        if( !IS_USE_MOBILE ) alert('既読管理がリストアされました。'); // mobile ではハングする
+        scanSection([]); // 強制実行
       }
     }
   });
-  // 長押しのコンテキストメニューを非活性化
+  // 長押しのコンテキストメニューを非活性化(mobile) ※効かない
   {
     const elements = document.querySelectorAll('articles');
     elements.forEach(el => {
